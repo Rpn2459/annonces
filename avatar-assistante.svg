@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <defs>
+    <clipPath id="c"><circle cx="60" cy="60" r="60"/></clipPath>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2a6e"/><stop offset="1" stop-color="#12123c"/></linearGradient>
+    <linearGradient id="hair" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a3420"/><stop offset="1" stop-color="#3b2014"/></linearGradient>
+  </defs>
+  <g clip-path="url(#c)">
+    <rect width="120" height="120" fill="url(#bg)"/>
+    <!-- cheveux arrière (carré mi-long) -->
+    <path d="M30 52c0-22 13-34 30-34s30 12 30 34v38c-6 4-14 5-20 3V60H50v33c-6 2-14 1-20-3z" fill="url(#hair)"/>
+    <!-- buste -->
+    <path d="M18 124c2-20 18-30 42-30s40 10 42 30z" fill="#e8eaf3"/>
+    <path d="M44 97c4 7 9 11 16 11s12-4 16-11c-5-2-10-3-16-3s-11 1-16 3z" fill="#f2c9a8"/>
+    <path d="M40 98l20 26 20-26c4 1 8 3 11 5L74 124H46L29 103c3-2 7-4 11-5z" fill="#12123c"/>
+    <!-- cou -->
+    <path d="M52 78h16v18c-2 4-6 6-8 6s-6-2-8-6z" fill="#e9b892"/>
+    <!-- visage -->
+    <ellipse cx="60" cy="58" rx="20" ry="24" fill="#f2c9a8"/>
+    <ellipse cx="40.5" cy="60" rx="3" ry="4.5" fill="#e9b892"/>
+    <ellipse cx="79.5" cy="60" rx="3" ry="4.5" fill="#e9b892"/>
+    <!-- frange / mèche -->
+    <path d="M38 52c2-18 13-26 24-26 12 0 21 8 21 24-8-2-17-8-22-16-4 9-12 15-23 18z" fill="url(#hair)"/>
+    <!-- sourcils -->
+    <path d="M47 51q5-3 10 0M63 51q5-3 10 0" stroke="#4a2a1a" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <!-- yeux -->
+    <ellipse cx="52" cy="58" rx="2.4" ry="2.8" fill="#2b1b14"/>
+    <ellipse cx="68" cy="58" rx="2.4" ry="2.8" fill="#2b1b14"/>
+    <circle cx="52.8" cy="57" r=".8" fill="#fff"/><circle cx="68.8" cy="57" r=".8" fill="#fff"/>
+    <!-- joues -->
+    <circle cx="47" cy="67" r="3.5" fill="#e89a8a" opacity=".45"/><circle cx="73" cy="67" r="3.5" fill="#e89a8a" opacity=".45"/>
+    <!-- nez + sourire -->
+    <path d="M60 60v6l-2 1" stroke="#d49c7a" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+    <path d="M53 72q7 6 14 0" stroke="#b5524a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+    <!-- boucles d'oreilles -->
+    <circle cx="40.5" cy="66" r="1.6" fill="#f5c542"/><circle cx="79.5" cy="66" r="1.6" fill="#f5c542"/>
+  </g>
+</svg>
