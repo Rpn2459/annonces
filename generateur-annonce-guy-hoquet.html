@@ -2,8 +2,15 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Générateur d'annonce animée — Guy Hoquet</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#12123c">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="GH Annonces">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -3844,5 +3851,13 @@ if (typeof module === "object" && typeof module.exports === "object") Object.ass
 })();
 </script>
 
+<!-- PWA : bouton retour à l'accueil (visible seulement dans l'app installée) -->
+<a id="gh-home" href="index.html" aria-label="Accueil" style="display:none;position:fixed;left:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:9999;width:46px;height:46px;border-radius:50%;background:#12123c;color:#fff;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.25);text-decoration:none"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg></a>
+<script>
+  (function(){
+    if(window.matchMedia('(display-mode: standalone)').matches || navigator.standalone){ document.getElementById('gh-home').style.display='flex'; }
+    if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(function(){}); }
+  })();
+</script>
 </body>
 </html>
