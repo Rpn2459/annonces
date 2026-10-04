@@ -119,7 +119,7 @@
     box-shadow:0 10px 30px rgba(18,18,60,.12);overflow:hidden;font-family:'Poppins',sans-serif;
   }
   .card-inner{position:absolute;inset:2.4%;border:2px solid var(--navy);}
-  .fade{opacity:0;animation:fadeIn .45s ease forwards;}
+  .fade{opacity:0;animation:fadeIn .8s ease forwards;}
   @keyframes fadeIn{to{opacity:1;}}
   .rise{opacity:0;transform:translateY(10px);animation:riseIn .5s ease forwards;}
   @keyframes riseIn{to{opacity:1;transform:translateY(0);}}
@@ -163,18 +163,6 @@
     font-size:clamp(11px,3vw,17px);line-height:1.12;
     text-shadow:0 1px 3px rgba(0,0,0,.4),0 3px 12px rgba(0,0,0,.5);
   }
-  /* small brand watermark sitting directly on the property photo itself (opposite corner from
-     the status chip), visible throughout — pixelated hold, spin and sharp — so the agency mark
-     travels with the photo even if it's cropped or screenshotted out of the rest of the card. */
-  .hero-photo .photo-watermark{
-    position:absolute;top:3%;right:3%;
-    background:rgba(255,255,255,.92);
-    padding:1.4% 2.8%;
-    display:flex;align-items:center;
-  }
-  .hero-photo .photo-watermark img{
-    height:clamp(14px,4.2vw,22px);width:auto;display:block;
-  }
 
   /* ---- reveal slide (Les Vendus) : pixelated photo spins, then resolves sharp ---- */
   .reveal-canvas{display:block;}
@@ -188,10 +176,15 @@
     transition:opacity .35s ease;
   }
   .teaser-overlay.hide{opacity:0;pointer-events:none;}
-  .teaser-kicker{
-    color:#fff;font-weight:700;text-transform:uppercase;letter-spacing:.04em;
-    font-size:clamp(9px,2.3vw,13px);text-shadow:0 1px 4px rgba(0,0,0,.4);
+  .teaser-episode{
+    color:#9fdcf5;font-weight:600;text-transform:uppercase;letter-spacing:.22em;
+    font-size:clamp(7px,1.7vw,9.5px);text-shadow:0 1px 4px rgba(0,0,0,.4);
   }
+  .teaser-kicker{
+    color:#fff;font-weight:500;letter-spacing:.01em;line-height:1.3;max-width:92%;
+    font-size:clamp(10px,2.6vw,14.5px);text-shadow:0 1px 4px rgba(0,0,0,.4);
+  }
+  .parcours-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;}
   .teaser-status{
     color:#fff;font-family:'Baloo 2',sans-serif;font-weight:800;text-transform:uppercase;
     font-size:clamp(20px,6.4vw,34px);line-height:1.05;
@@ -202,9 +195,9 @@
     font-family:'Poppins',sans-serif;font-weight:800;text-transform:uppercase;letter-spacing:.05em;
     font-size:clamp(11px,3vw,15px);padding:3.2% 9%;border-radius:999px;
     box-shadow:0 3px 14px rgba(0,0,0,.35);
-    animation:teaserPulse 1.8s ease-in-out infinite;
+    animation:teaserPulse 2.4s ease-in-out infinite;
   }
-  @keyframes teaserPulse{ 0%,100%{transform:scale(1);} 50%{transform:scale(1.055);} }
+  @keyframes teaserPulse{ 0%,100%{transform:scale(1);} 50%{transform:scale(1.035);} }
   .exporting .teaser-btn{animation:none !important;}
 
   @keyframes chipRise{ from{opacity:0;transform:translateY(8px);} to{opacity:1;transform:translateY(0);} }
@@ -298,7 +291,7 @@
 
 <div class="topbar">
   <h1>Les Vendus — annonce animée</h1>
-  <p>Annonce une vente ou une offre acceptée : la photo du bien se révèle depuis une version pixelisée qui tournoie, puis nos services s'affichent. Mêmes codes Guy Hoquet (marine &amp; blanc), change juste la photo et les textes.</p>
+  <p>Annonce une étape de vente comme un feuilleton : la photo se révèle depuis une version pixelisée, puis le parcours de la vente (fait / en cours / à venir) s'anime, et le conseiller conclut. Le parcours s'adapte tout seul au statut choisi.</p>
 </div>
 
 <div class="app">
@@ -314,16 +307,27 @@
       <div class="field">
         <label>Statut</label>
         <select id="f-status">
-          <option>sous compromis</option>
-          <option>sous offre</option>
-          <option>vendu</option>
+          <option value="sous offre">sous offre — épisode 1 (offre signée)</option>
+          <option value="sous compromis">sous compromis — épisode 2 (compromis signé)</option>
+          <option value="vendu">vendu — épisode final (acte authentique signé)</option>
         </select>
+      </div>
+      <div class="field">
+        <label>Accroche (sur la photo floutée)</label>
+        <select id="f-hook">
+          <option value="page">Une nouvelle page s'écrit à [ville]…</option>
+          <option value="vite">Il n'aura pas attendu longtemps…</option>
+          <option value="projet">Un projet de vie vient de se concrétiser…</option>
+          <option value="classique">Ce bien vient de passer</option>
+          <option value="custom">Personnalisée…</option>
+        </select>
+        <input type="text" id="f-hook-custom" maxlength="60" placeholder="Votre accroche" style="margin-top:6px;display:none;">
       </div>
       <div class="field">
         <label>Secteur / ville</label>
         <input type="text" id="f-city" maxlength="30">
       </div>
-      <div class="field-hint">Ce statut s'affiche sur l'annonce teaser ("le bien vient de passer…") et sur la photo une fois révélée.</div>
+      <div class="field-hint">Le statut pilote tout : l'épisode affiché, le parcours (étapes faites / en cours / à venir) et le « prochain épisode ». Conseil : réservez « vendu » au jour de la signature de l'acte authentique — tant qu'il n'est pas signé, la vente n'est pas définitive.</div>
     </div>
 
     <div class="section">
@@ -332,7 +336,7 @@
         <span id="photo-upload-label">📷 Ajouter la photo du bien</span>
         <input type="file" id="f-photos" accept="image/*">
       </label>
-      <div class="field-hint" style="margin-top:8px;">Une seule photo : c'est elle qui tournoie, pixelisée, avant de se révéler nette quand on appuie sur "Voir".</div>
+      <div class="field-hint" style="margin-top:8px;">Une seule photo : c'est elle qui tournoie, pixelisée, avant de se révéler nette quand on appuie sur « Découvrir ».</div>
       <div id="photo-list" style="margin-top:10px;"></div>
     </div>
 
@@ -375,6 +379,19 @@
     </div>
 
     <div class="section">
+      <h2>Message final</h2>
+      <div class="field">
+        <label>Appel à l'action (carte du conseiller)</label>
+        <select id="f-cta">
+          <option value="prochain">Le prochain, ce sera peut-être le vôtre.</option>
+          <option value="accompagnement">Votre projet mérite le même accompagnement.</option>
+          <option value="estimation">Votre bien sera-t-il le prochain ? Estimation offerte.</option>
+          <option value="classique">Vous vendez aussi ? Contactez-moi !</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="section">
       <button class="btn btn-danger" id="reset-btn" style="width:100%;">Réinitialiser tout</button>
       <div class="save-indicator" id="save-indicator"></div>
     </div>
@@ -409,7 +426,7 @@
       <button class="btn btn-ghost" id="export-btn">Télécharger l'image affichée (PNG)</button>
       <button class="btn btn-primary" id="video-btn">Télécharger la vidéo (MP4)</button>
     </div>
-    <div class="field-hint" style="width:100%;max-width:440px;text-align:center;">La vidéo joue elle-même la dépixelisation (pause puis révélation en spin) — prête à poster directement sur Facebook, LinkedIn ou Instagram.</div>
+    <div class="field-hint" style="width:100%;max-width:440px;text-align:center;">La vidéo enchaîne la révélation, le parcours de la vente puis le conseiller — prête à poster directement sur Facebook, LinkedIn ou Instagram.</div>
     <div class="save-indicator" id="video-status"></div>
     <a class="download-link" id="video-link" style="display:none;"></a>
   </div>
@@ -2333,7 +2350,68 @@ if (typeof module === "object" && typeof module.exports === "object") Object.ass
   // The "appel à mes services" line shown last on the agent slide — proposing the viewer
   // also sell their own property through the same advisor. Kept as one constant so both the
   // DOM typewriter sequence and the canvas export draw the exact same wording.
-  var AGENT_CTA_TEXT = "Vous vendez aussi ? Contactez-moi !";
+  var CTA_TEXTS = {
+    prochain: "Le prochain, ce sera peut-être le vôtre.",
+    accompagnement: "Votre projet mérite le même accompagnement.",
+    estimation: "Votre bien sera-t-il le prochain ? Estimation offerte.",
+    classique: "Vous vendez aussi ? Contactez-moi !"
+  };
+  function agentCtaText(){ return CTA_TEXTS[state.cta] || CTA_TEXTS.prochain; }
+
+  // Accroche shown above the status on the pixelated teaser.
+  function hookText(){
+    var city = (state.city||"").trim();
+    switch(state.hook){
+      case "vite": return "Il n'aura pas attendu longtemps…";
+      case "projet": return "Un projet de vie vient de se concrétiser…";
+      case "classique": return "Ce bien vient de passer";
+      case "custom": return (state.hookCustom||"").trim() || "Ce bien vient de passer";
+      default: return city ? ("Une nouvelle page s'écrit à "+city+"…") : "Une nouvelle page s'écrit…";
+    }
+  }
+
+  // ---- Le feuilleton : chaque statut est un épisode, et le parcours s'adapte ----
+  // step states: "done" | "current" | "todo"
+  function storyFor(status){
+    if(status === "sous offre") return {
+      episode: "Épisode 1",
+      steps: [
+        {s:"done",    t:"Offre négociée et signée",        d:"Accord trouvé entre vendeur et acquéreur"},
+        {s:"current", t:"Compromis de vente en rédaction",  d:"Vérification des diagnostics et des pièces"},
+        {s:"todo",    t:"Dossier notarial",                 d:"Préparation de la vente avec le notaire"},
+        {s:"todo",    t:"Signature de l'acte authentique",  d:"Remise des clés aux nouveaux propriétaires"}
+      ],
+      message: "Une première étape franchie. Nous restons aux côtés de nos clients, jusqu'à la remise des clés.",
+      nextLabel: "Prochain épisode",
+      next: "La signature du compromis"
+    };
+    if(status === "vendu") return {
+      episode: "Épisode final",
+      steps: [
+        {s:"done", t:"Offre négociée et signée",     d:"Accord trouvé entre vendeur et acquéreur"},
+        {s:"done", t:"Compromis de vente signé",     d:"Engagement réciproque des parties"},
+        {s:"done", t:"Dossier notarial finalisé",    d:"Conditions suspensives levées"},
+        {s:"done", t:"Acte authentique signé",       d:"Les nouveaux propriétaires sont chez eux"}
+      ],
+      message: "Mission accomplie. Merci à nos clients pour leur confiance.",
+      nextLabel: "Fin de l'histoire",
+      next: "Les clés ont changé de mains"
+    };
+    return { // sous compromis (défaut)
+      episode: "Épisode 2",
+      steps: [
+        {s:"done",    t:"Offre négociée et signée",        d:"Accord trouvé entre vendeur et acquéreur"},
+        {s:"done",    t:"Compromis de vente signé",        d:"Engagement réciproque des parties"},
+        {s:"current", t:"Dossier notarial en préparation", d:"Suivi des conditions suspensives et du financement"},
+        {s:"todo",    t:"Signature de l'acte authentique", d:"Remise des clés aux nouveaux propriétaires"}
+      ],
+      message: "Une étape franchie. Nous accompagnons nos clients jusqu'à la remise des clés.",
+      nextLabel: "Prochain épisode",
+      next: "La signature de l'acte authentique"
+    };
+  }
+  var PARCOURS_ANIM_MS = 8000; // durée de l'animation du parcours
+  var PARCOURS_MS = 9000;      // durée totale à l'écran (+1 s de lecture une fois tout affiché)
 
   var STORAGE_KEY = "vendu-config";
   var MAX_PHOTOS = 1; // this app is built around a single hero photo — the one that reveals
@@ -2351,6 +2429,9 @@ if (typeof module === "object" && typeof module.exports === "object") Object.ass
   var defaultState = {
     type: "",
     status: "sous compromis",
+    hook: "page",
+    hookCustom: "",
+    cta: "prochain",
     city: "",
     agentName: "",
     agentPhone: "",
@@ -2550,6 +2631,10 @@ if (typeof module === "object" && typeof module.exports === "object") Object.ass
   function hydrateForm(){
     document.getElementById("f-type").value = state.type;
     document.getElementById("f-status").value = state.status;
+    document.getElementById("f-hook").value = state.hook || "page";
+    document.getElementById("f-hook-custom").value = state.hookCustom || "";
+    document.getElementById("f-hook-custom").style.display = state.hook === "custom" ? "block" : "none";
+    document.getElementById("f-cta").value = state.cta || "prochain";
     document.getElementById("f-city").value = state.city;
     document.getElementById("f-agent-name").value = state.agentName;
     document.getElementById("f-agent-phone").value = state.agentPhone;
@@ -2567,6 +2652,14 @@ if (typeof module === "object" && typeof module.exports === "object") Object.ass
   }
   bindField("f-type","type");
   bindField("f-status","status");
+  document.getElementById("f-status").addEventListener("change", function(e){ state.status = e.target.value; renderCard(); scheduleSave(); });
+  document.getElementById("f-hook").addEventListener("change", function(e){
+    state.hook = e.target.value;
+    document.getElementById("f-hook-custom").style.display = state.hook === "custom" ? "block" : "none";
+    renderCard(); scheduleSave();
+  });
+  bindField("f-hook-custom","hookCustom");
+  document.getElementById("f-cta").addEventListener("change", function(e){ state.cta = e.target.value; renderCard(); scheduleSave(); });
   bindField("f-city","city");
   bindField("f-agent-name","agentName");
   bindField("f-agent-phone","agentPhone");
@@ -2773,7 +2866,8 @@ if (typeof module === "object" && typeof module.exports === "object") Object.ass
   function totalSlides(){
     // one per photo + agent slide, when there are photos (no separate intro slide — the
     // video/preview starts directly on the reveal slide, already showing the pixelated photo).
-    return state.photos.length > 0 ? state.photos.length + 1 : 1;
+    // photo(s) → parcours → agent
+    return state.photos.length > 0 ? state.photos.length + 2 : 1;
   }
 
   function resetLoop(){
@@ -2789,7 +2883,7 @@ if (typeof module === "object" && typeof module.exports === "object") Object.ass
   // always covers however long the name/contact details actually take to type out, plus a
   // fixed buffer to actually read the final call-to-action once typing is done.
   function agentSlideTexts(){
-    return [state.agentName||'', state.agentPhone||'', state.agentEmail||'', "Agence Guy Hoquet Saint-Omer", AGENT_CTA_TEXT];
+    return [state.agentName||'', state.agentPhone||'', state.agentEmail||'', "Agence Guy Hoquet Saint-Omer", agentCtaText()];
   }
   function agentSlideReadMs(){
     var msPerChar = 42, delayMs = 150;
@@ -2802,9 +2896,11 @@ if (typeof module === "object" && typeof module.exports === "object") Object.ass
   }
   function currentSlideDurationMs(baseDur){
     var n = state.photos.length;
-    var isAgentSlide = n > 0 && slideIndex === n;
+    var isAgentSlide = n > 0 && slideIndex === n+1;
+    var isParcoursSlide = n > 0 && slideIndex === n;
     var isRevealSlide = n > 0 && slideIndex === 0;
     if(isAgentSlide) return Math.max(baseDur, agentSlideReadMs());
+    if(isParcoursSlide) return Math.max(baseDur, PARCOURS_MS);
     if(isRevealSlide) return Math.max(baseDur, revealSlideDurationMs());
     return baseDur;
   }
@@ -2869,8 +2965,15 @@ if (typeof module === "object" && typeof module.exports === "object") Object.ass
   function renderCard(){
     var card = document.getElementById("card");
     var n = state.photos.length;
-    var isAgentSlide = n > 0 && slideIndex === n;
-    var mainIdx = (!isAgentSlide && n > 0) ? slideIndex : -1;
+    var isAgentSlide = n > 0 && slideIndex === n+1;
+    var isParcoursSlide = n > 0 && slideIndex === n;
+    var mainIdx = (!isAgentSlide && !isParcoursSlide && n > 0) ? slideIndex : -1;
+    parcoursRunId++;
+    if(isParcoursSlide){
+      card.innerHTML = '<canvas class="parcours-canvas"></canvas>';
+      startParcoursAnimation();
+      return;
+    }
     if(isAgentSlide){
       card.innerHTML = agentSlideHtml();
     } else {
@@ -2887,6 +2990,32 @@ if (typeof module === "object" && typeof module.exports === "object") Object.ass
   // status announcement + "Voir" button on top, and pauses slide auto-advance so the viewer
   // has time to click through at their own pace. Clicking "Voir" hands off to
   // applyRevealAnimation(), which plays the real spin/reveal and resumes auto-advance once done.
+  // Live preview of the parcours slide: the very same canvas drawing used by the PNG/MP4
+  // export, driven by wall-clock time, so preview and video always match.
+  var parcoursRunId = 0;
+  function startParcoursAnimation(){
+    var myRunId = parcoursRunId;
+    var canvas = document.querySelector('#card canvas.parcours-canvas');
+    if(!canvas) return;
+    var ratio = window.devicePixelRatio || 1;
+    var rect = canvas.getBoundingClientRect();
+    var size = Math.max(2, Math.round(rect.width*ratio));
+    canvas.width = size; canvas.height = size;
+    var ctx = canvas.getContext('2d');
+    Promise.all([fontsReady(), loadImageCached(LOGO_DATA_URI)]).then(function(res){
+      if(myRunId !== parcoursRunId) return;
+      var logo = res[1], start = null;
+      function tick(ts){
+        if(myRunId !== parcoursRunId) return;
+        if(start === null) start = ts;
+        var elapsed = ts - start;
+        drawParcoursFrame(ctx, size, size, Math.min(1, elapsed/PARCOURS_ANIM_MS), elapsed, logo);
+        requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    });
+  }
+
   var revealRunId = 0;
   function setupRevealTeaser(){
     var myRunId = ++revealRunId;
@@ -3028,7 +3157,6 @@ if (typeof module === "object" && typeof module.exports === "object") Object.ass
             ? '<canvas class="photo-fill reveal-canvas"></canvas>'
             : (main ? '<div class="photo-fill '+(mainIdx%2===0?"zoom-in":"zoom-out")+'" style="background-image:url(&quot;'+main.src+'&quot;)"></div>' : photoPlaceholderHtml())
           )+
-          '<div class="photo-watermark"><img src="'+LOGO_DATA_URI+'" alt="Guy Hoquet"></div>'+
           '<div class="status-chip">'+escapeHtml((state.status||"").toUpperCase())+'</div>'+
           (main && main.label ? '<div class="feature-label">'+escapeHtml(main.label)+'</div>' : '')+
           (isReveal ? teaserOverlayHtml() : '')+
@@ -3047,9 +3175,10 @@ if (typeof module === "object" && typeof module.exports === "object") Object.ass
   function teaserOverlayHtml(){
     return ''+
       '<div class="teaser-overlay" id="teaser-overlay">'+
-        '<div class="teaser-kicker">Ce bien vient de passer</div>'+
+        '<div class="teaser-episode">'+escapeHtml(storyFor(state.status).episode)+'</div>'+
+        '<div class="teaser-kicker">'+escapeHtml(hookText())+'</div>'+
         '<div class="teaser-status">'+escapeHtml((state.status||"").toUpperCase())+'</div>'+
-        '<button type="button" class="teaser-btn" id="teaser-voir-btn">Voir</button>'+
+        '<button type="button" class="teaser-btn" id="teaser-voir-btn">Découvrir</button>'+
       '</div>';
   }
 
@@ -3066,7 +3195,7 @@ if (typeof module === "object" && typeof module.exports === "object") Object.ass
           '<div class="agent-pill"><span class="tw" id="tw-agent-phone">'+escapeHtml(state.agentPhone)+'</span></div>'+
           '<div class="agent-pill"><span class="tw" id="tw-agent-email">'+escapeHtml(state.agentEmail)+'</span></div>'+
           '<div class="agent-pill"><span class="tw" id="tw-agent-city">'+escapeHtml("Agence Guy Hoquet Saint-Omer")+'</span></div>'+
-          '<div class="agent-pill agent-cta"><span class="tw" id="tw-agent-cta">'+escapeHtml(AGENT_CTA_TEXT)+'</span></div>'+
+          '<div class="agent-pill agent-cta"><span class="tw" id="tw-agent-cta">'+escapeHtml(agentCtaText())+'</span></div>'+
         '</div>'+
       '</div>';
   }
@@ -3711,23 +3840,37 @@ if (typeof module === "object" && typeof module.exports === "object") Object.ass
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.shadowColor = 'rgba(0,0,0,.4)'; ctx.shadowBlur = 8;
 
-    var kickerY = hy + hh*0.38;
-    ctx.font = '700 '+Math.round(hh*0.05)+'px Poppins';
-    ctx.fillStyle = '#fff';
-    ctx.fillText('CE BIEN VIENT DE PASSER', cx, kickerY);
+    // measure the whole block (episode / accroche on up to 2 lines / status / button) and
+    // centre it vertically in the hero box — mirrors the DOM flex column.
+    var epFont = '600 '+Math.round(hh*0.036)+'px Poppins';
+    var kFont = '500 '+Math.round(hh*0.054)+'px Poppins';
+    var stFont = '800 '+Math.round(hh*0.125)+'px "Baloo 2"';
+    ctx.font = kFont;
+    var kLines = wrapTextCanvas(ctx, hookText(), hw*0.84, 2);
+    var epH = hh*0.05, kLineH = hh*0.074, stH = hh*0.13, btnH = hh*0.1, gap = hh*0.035;
+    var blockH = epH + gap + kLines.length*kLineH + gap*0.6 + stH + gap + btnH;
+    var y = hy + (hh-blockH)/2;
 
-    var statusY = kickerY + hh*0.12;
-    ctx.font = '800 '+Math.round(hh*0.125)+'px "Baloo 2"';
+    ctx.font = epFont; ctx.fillStyle = '#9fdcf5';
+    drawSpacedText(ctx, storyFor(state.status).episode.toUpperCase(), cx, y+epH/2, hh*0.008);
+    y += epH + gap;
+
+    ctx.font = kFont; ctx.fillStyle = '#fff';
+    kLines.forEach(function(line){ ctx.fillText(line, cx, y+kLineH/2); y += kLineH; });
+    y += gap*0.6;
+
+    ctx.font = stFont;
     ctx.shadowBlur = 12; ctx.shadowOffsetY = 2;
-    ctx.fillText((state.status||'').toUpperCase(), cx, statusY);
+    ctx.fillText((state.status||'').toUpperCase(), cx, y+stH/2);
     ctx.shadowBlur = 0; ctx.shadowOffsetY = 0;
+    y += stH + gap;
 
-    var btnText = 'VOIR';
+    var btnText = 'DÉCOUVRIR';
     ctx.font = '800 '+Math.round(hh*0.052)+'px Poppins';
     var btnMetrics = ctx.measureText(btnText);
-    var btnPadX = hh*0.09, btnH = hh*0.1;
+    var btnPadX = hh*0.09;
     var btnW = btnMetrics.width + btnPadX*2.6;
-    var btnY = statusY + hh*0.13;
+    var btnY = y;
     var btnX = cx - btnW/2;
     ctx.fillStyle = '#fff';
     ctx.shadowColor = 'rgba(0,0,0,.35)'; ctx.shadowBlur = 10; ctx.shadowOffsetY = 2;
@@ -3767,32 +3910,10 @@ if (typeof module === "object" && typeof module.exports === "object") Object.ass
     var revealProgress = isReveal ? revealSpinProgress(entryT) : entryT;
 
     var hx=innerX0+0.045*innerSize, hy=innerY0+0.135*innerSize, hw=0.91*innerSize, hh=0.645*innerSize;
-
-    // small brand watermark drawn directly onto the photo itself (top-right corner, opposite
-    // the status chip) — same white chip + logo the DOM twin (.photo-watermark) draws. Always
-    // on, not gated by revealProgress, so the mark rides along even if just the photo gets
-    // cropped or screenshotted out of the rest of the card. Drawn right after the photo
-    // content but BEFORE the teaser scrim (matching DOM paint order: photo-fill, then
-    // .photo-watermark, then .teaser-overlay on top), so it dims under the scrim during the
-    // pixelated hold exactly like the DOM version does.
-    function drawPhotoWatermark(){
-      if(!logoImg) return;
-      var wmLogoH = hh*0.052;
-      var wmLogoW = wmLogoH * (logoImg.width/logoImg.height);
-      var wmPadX = wmLogoH*0.55, wmPadY = wmLogoH*0.32;
-      var wmW = wmLogoW + wmPadX*2, wmH = wmLogoH + wmPadY*2;
-      var wmX = hx+hw - wmW - hw*0.03, wmY = hy + hh*0.03;
-      ctx.fillStyle = 'rgba(255,255,255,0.92)';
-      ctx.fillRect(wmX, wmY, wmW, wmH);
-      ctx.drawImage(logoImg, wmX+wmPadX, wmY+wmPadY, wmLogoW, wmLogoH);
-    }
-
     if(isReveal){
       ctx.save(); ctx.beginPath(); ctx.rect(hx,hy,hw,hh); ctx.clip();
       drawPixelSpinReveal(ctx, main, hx, hy, hw, hh, revealProgress);
       ctx.restore();
-
-      drawPhotoWatermark();
 
       var overlayAlpha = 1 - Math.min(1, Math.max(0, (entryT-TEASER_HOLD_FRACTION)/TEASER_FADE_FRACTION));
       drawTeaserOverlayCanvas(ctx, hx, hy, hw, hh, navy, overlayAlpha);
@@ -3803,9 +3924,8 @@ if (typeof module === "object" && typeof module.exports === "object") Object.ass
       ctx.save(); ctx.beginPath(); ctx.rect(hx,hy,hw,hh); ctx.clip();
       drawCoverImageZoomed(ctx, main, hx,hy,hw,hh, zoom);
       ctx.restore();
-      drawPhotoWatermark();
     }
-    else { drawPlaceholder(ctx, hx,hy,hw,hh); drawPhotoWatermark(); }
+    else drawPlaceholder(ctx, hx,hy,hw,hh);
 
     // status chip + feature label: quick staggered entrance (fade + rise), then settle —
     // status appears first, the feature label follows shortly after. On the reveal slide
@@ -3905,7 +4025,7 @@ if (typeof module === "object" && typeof module.exports === "object") Object.ass
     var revealProgress = (zoomProgress!=null) ? zoomProgress : 1;
     var agencyLine = "Agence Guy Hoquet Saint-Omer";
     var revealTexts = computeSequentialReveal(
-      [state.agentName||'', state.agentPhone||'', state.agentEmail||'', agencyLine, AGENT_CTA_TEXT],
+      [state.agentName||'', state.agentPhone||'', state.agentEmail||'', agencyLine, agentCtaText()],
       revealProgress, 0.7
     );
     var nameShown = revealTexts[0], phoneShown = revealTexts[1], emailShown = revealTexts[2], cityShown = revealTexts[3], ctaShown = revealTexts[4];
@@ -3921,7 +4041,7 @@ if (typeof module === "object" && typeof module.exports === "object") Object.ass
     var pillY = innerY0+0.52*innerSize;
     var pillGap = 0.04*innerSize;
     var pillTexts = [phoneShown, emailShown, cityShown, ctaShown];
-    var pillFull = [state.agentPhone, state.agentEmail, agencyLine, AGENT_CTA_TEXT];
+    var pillFull = [state.agentPhone, state.agentEmail, agencyLine, agentCtaText()];
     var pillIsCta = [false, false, false, true];
     var pillH = innerSize*0.072;
     var pillFont = '700 '+Math.round(innerSize*0.032)+'px Poppins';
@@ -3935,6 +4055,8 @@ if (typeof module === "object" && typeof module.exports === "object") Object.ass
           // the final pill — "vous aussi, contactez-moi" — gets the azure brand accent and
           // runs the full pill width, centered, so it visually stands apart as the proposal.
           ctx.font = ctaFont;
+          var ctaSize = Math.round(innerSize*0.034);
+          while(ctaSize > 10 && ctx.measureText(t).width > pillsW*0.92){ ctaSize--; ctx.font = '800 '+ctaSize+'px Poppins'; }
           ctx.fillStyle = '#0096d6';
           ctx.fillRect(pillsX, pillY, pillsW, rowH);
           ctx.fillStyle = '#fff'; ctx.textAlign='center'; ctx.textBaseline='middle';
@@ -3955,12 +4077,192 @@ if (typeof module === "object" && typeof module.exports === "object") Object.ass
     }
   }
 
+  function wrapTextCanvas(ctx, text, maxWidth, maxLines){
+    var words = (text||'').split(/\s+/), lines = [], cur = '';
+    words.forEach(function(w){
+      var test = cur ? cur+' '+w : w;
+      if(ctx.measureText(test).width > maxWidth && cur){ lines.push(cur); cur = w; }
+      else cur = test;
+    });
+    if(cur) lines.push(cur);
+    if(lines.length > maxLines){
+      var rest = lines.slice(maxLines-1).join(' ');
+      lines = lines.slice(0, maxLines-1);
+      lines.push(fitTextCanvas(ctx, rest, maxWidth));
+    }
+    return lines;
+  }
+
+  // centred text with letter-spacing (canvas letterSpacing isn't available everywhere)
+  function drawSpacedText(ctx, text, cx, cy, spacing){
+    var chars = text.split(''), total = 0, widths = [];
+    chars.forEach(function(c){ var w = ctx.measureText(c).width; widths.push(w); total += w; });
+    total += spacing*(chars.length-1);
+    var x = cx - total/2, oldAlign = ctx.textAlign;
+    ctx.textAlign = 'left';
+    chars.forEach(function(c,i){ ctx.fillText(c, x, cy); x += widths[i] + spacing; });
+    ctx.textAlign = oldAlign;
+  }
+
+  function easeOutBack(t){ var c1=1.4, c3=c1+1; return 1 + c3*Math.pow(t-1,3) + c1*Math.pow(t-1,2); }
+
+  // ---- Le parcours de la vente : one shared drawing for live preview, PNG and MP4 ----
+  // progress 0..1 drives the staged entrance; tMs (optional) drives the "en cours" pulse.
+  function drawParcoursFrame(ctx, W, H, progress, tMs, logoImg){
+    var navy = '#12123c', azure = '#0096d6', grey = '#b9bdd0', ink = '#5a5e73';
+    var story = storyFor(state.status);
+    function seg(a, b){ return Math.min(1, Math.max(0, (progress-a)/(b-a))); }
+
+    ctx.save();
+    ctx.fillStyle = '#ffffff'; ctx.fillRect(0,0,W,H);
+    var innerX0 = W*0.024, innerY0 = H*0.024, S = W*0.952;
+    ctx.strokeStyle = navy; ctx.lineWidth = Math.max(2, W*0.0037);
+    ctx.strokeRect(innerX0+ctx.lineWidth/2, innerY0+ctx.lineWidth/2, S-ctx.lineWidth, S-ctx.lineWidth);
+
+    // top row: logo + episode chip
+    var tbX = innerX0+0.045*S, tbY = innerY0+0.035*S, tbW = 0.91*S, tbH = 0.09*S;
+    if(logoImg){
+      var logoH = tbH*0.78, logoW = logoH*(logoImg.width/logoImg.height);
+      if(logoW > tbW*0.34){ logoW = tbW*0.34; logoH = logoW*(logoImg.height/logoImg.width); }
+      ctx.drawImage(logoImg, tbX, tbY+(tbH-logoH)/2, logoW, logoH);
+    }
+    var a0 = seg(0, 0.08);
+    ctx.globalAlpha = a0;
+    ctx.font = '700 '+Math.round(S*0.021)+'px Poppins';
+    var epText = story.episode.toUpperCase();
+    var epW = ctx.measureText(epText).width + epText.length*S*0.004 + S*0.05, epH = S*0.05;
+    var epX = tbX+tbW-epW, epY = tbY+(tbH-epH)/2;
+    ctx.strokeStyle = navy; ctx.lineWidth = Math.max(1.5, S*0.0022);
+    ctx.strokeRect(epX, epY, epW, epH);
+    ctx.fillStyle = navy; ctx.textBaseline = 'middle';
+    drawSpacedText(ctx, epText, epX+epW/2, epY+epH/2+1, S*0.004);
+
+    // title
+    var a1 = seg(0.02, 0.12), rise = (1-easeOutCubic(a1))*S*0.02;
+    ctx.globalAlpha = a1;
+    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillStyle = navy;
+    ctx.font = '800 '+Math.round(S*0.056)+'px "Baloo 2"';
+    ctx.fillText('LE PARCOURS DE CETTE VENTE', tbX, innerY0+0.200*S+rise);
+    ctx.fillStyle = azure; ctx.fillRect(tbX, innerY0+0.224*S+rise, S*0.07, Math.max(2, S*0.004));
+    var sub = [state.type, state.city].filter(function(x){ return x && x.trim(); }).join(' · ');
+    if(sub){
+      ctx.fillStyle = ink; ctx.font = '500 '+Math.round(S*0.023)+'px Poppins';
+      ctx.fillText(fitTextCanvas(ctx, sub, tbW*0.8), tbX+S*0.085, innerY0+0.232*S+rise);
+    }
+    ctx.globalAlpha = 1;
+
+    // timeline
+    var steps = story.steps;
+    var mx = tbX + S*0.035, tx = tbX + S*0.095;
+    var y0 = innerY0+0.32*S, dy = 0.112*S, r = S*0.022;
+    var stepStart = function(i){ return 0.12 + i*0.1; };
+
+    // connector line: navy between done steps, dashed grey towards upcoming ones
+    for(var i=0;i<steps.length-1;i++){
+      var ls = seg(stepStart(i)+0.04, stepStart(i+1)+0.02);
+      if(ls <= 0) continue;
+      var yA = y0+i*dy + r, yB = y0+(i+1)*dy - r;
+      var solid = steps[i+1].s !== 'todo';
+      ctx.save();
+      ctx.lineWidth = Math.max(2, S*0.004); ctx.lineCap = 'round';
+      if(solid){ ctx.strokeStyle = steps[i+1].s === 'current' ? azure : navy; }
+      else { ctx.strokeStyle = grey; ctx.setLineDash([S*0.008, S*0.01]); }
+      ctx.beginPath(); ctx.moveTo(mx, yA); ctx.lineTo(mx, yA + (yB-yA)*easeOutCubic(ls)); ctx.stroke();
+      ctx.restore();
+    }
+
+    for(var j=0;j<steps.length;j++){
+      var st = steps[j], a = seg(stepStart(j), stepStart(j)+0.08);
+      if(a <= 0) continue;
+      var cy = y0 + j*dy;
+      var pop = easeOutBack(a);
+      ctx.save();
+      ctx.globalAlpha = Math.min(1, a*1.5);
+      if(st.s === 'done'){
+        ctx.fillStyle = navy;
+        ctx.beginPath(); ctx.arc(mx, cy, r*pop, 0, Math.PI*2); ctx.fill();
+        ctx.strokeStyle = '#fff'; ctx.lineWidth = Math.max(2, r*0.2); ctx.lineCap='round'; ctx.lineJoin='round';
+        ctx.beginPath(); ctx.moveTo(mx-r*0.42, cy+r*0.02); ctx.lineTo(mx-r*0.1, cy+r*0.34); ctx.lineTo(mx+r*0.46, cy-r*0.32); ctx.stroke();
+      } else if(st.s === 'current'){
+        var pulse = (tMs!=null) ? (0.5 + 0.5*Math.sin(tMs/1000*Math.PI*1.6)) : 0.35;
+        ctx.fillStyle = 'rgba(0,150,214,'+(0.10+0.18*(1-pulse))+')';
+        ctx.beginPath(); ctx.arc(mx, cy, r*(1.25+0.55*pulse)*pop, 0, Math.PI*2); ctx.fill();
+        ctx.fillStyle = '#fff'; ctx.strokeStyle = azure; ctx.lineWidth = Math.max(2, r*0.18);
+        ctx.beginPath(); ctx.arc(mx, cy, r*pop, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+        ctx.fillStyle = azure;
+        ctx.beginPath(); ctx.arc(mx, cy, r*0.45*pop, 0, Math.PI*2); ctx.fill();
+      } else {
+        ctx.fillStyle = '#fff'; ctx.strokeStyle = grey; ctx.lineWidth = Math.max(1.5, r*0.13);
+        ctx.beginPath(); ctx.arc(mx, cy, r*pop, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+      }
+      // texts
+      var slide = (1-easeOutCubic(a))*S*0.03;
+      ctx.globalAlpha = a;
+      ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+      ctx.font = '700 '+Math.round(S*0.031)+'px Poppins';
+      ctx.fillStyle = st.s === 'todo' ? '#8d92a8' : (st.s === 'current' ? azure : navy);
+      var title = st.t;
+      ctx.fillText(fitTextCanvas(ctx, title, S*0.62), tx+slide, cy - S*0.002);
+      if(st.s === 'current'){
+        var tw = Math.min(S*0.62, ctx.measureText(title).width);
+        ctx.font = '700 '+Math.round(S*0.017)+'px Poppins';
+        var tag = 'EN COURS', tagW = ctx.measureText(tag).width + S*0.03, tagH = S*0.032;
+        var tagX = tx+slide+tw+S*0.018, tagY = cy - S*0.013 - tagH/2;
+        ctx.fillStyle = azure; roundRectPathCanvas(ctx, tagX, tagY, tagW, tagH, tagH/2); ctx.fill();
+        ctx.fillStyle = '#fff'; ctx.textBaseline = 'middle'; ctx.fillText(tag, tagX+S*0.015, tagY+tagH/2+1);
+        ctx.textBaseline = 'alphabetic';
+      }
+      ctx.font = '400 '+Math.round(S*0.021)+'px Poppins';
+      ctx.fillStyle = st.s === 'todo' ? '#a7abbe' : ink;
+      ctx.fillText(fitTextCanvas(ctx, st.d, S*0.78), tx+slide, cy + S*0.032);
+      ctx.restore();
+    }
+
+    // closing message
+    var am = seg(0.58, 0.7);
+    ctx.globalAlpha = am;
+    ctx.fillStyle = navy; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.font = '500 '+Math.round(S*0.024)+'px Poppins';
+    var mLines = wrapTextCanvas(ctx, story.message, S*0.84, 2);
+    var my = innerY0 + 0.765*S - (mLines.length-1)*S*0.018;
+    mLines.forEach(function(l){ ctx.fillText(l, innerX0+S/2, my); my += S*0.036; });
+
+    // "prochain épisode" band
+    var ab = seg(0.68, 0.8), bandX = innerX0+0.045*S, bandW = 0.91*S, bandY = innerY0+0.83*S, bandH = 0.095*S;
+    if(ab > 0){
+      ctx.globalAlpha = 1;
+      ctx.save(); ctx.beginPath(); ctx.rect(bandX, bandY, bandW*easeOutCubic(ab), bandH); ctx.clip();
+      ctx.fillStyle = navy; ctx.fillRect(bandX, bandY, bandW, bandH);
+      ctx.restore();
+      var at = seg(0.74, 0.84);
+      ctx.globalAlpha = at;
+      ctx.font = '600 '+Math.round(S*0.017)+'px Poppins'; ctx.fillStyle = '#9fdcf5';
+      drawSpacedText(ctx, story.nextLabel.toUpperCase(), innerX0+S/2, bandY+bandH*0.32, S*0.005);
+      ctx.font = '800 '+Math.round(S*0.034)+'px "Baloo 2"'; ctx.fillStyle = '#fff'; ctx.textAlign = 'center';
+      ctx.fillText(fitTextCanvas(ctx, story.next.toUpperCase(), bandW*0.92), innerX0+S/2, bandY+bandH*0.68);
+    }
+
+    // footer — agent, like the other slides
+    ctx.globalAlpha = seg(0.02, 0.12);
+    ctx.font = '700 '+Math.round(S*0.02)+'px Poppins';
+    ctx.fillStyle = navy; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    var footer = [state.agentName, state.agentPhone].filter(function(x){return x;}).join(' · ');
+    if(footer) ctx.fillText(footer, innerX0+S/2, innerY0+S-S*0.032);
+    ctx.restore();
+  }
+
   // Renders slide `step` (0..photos.length-1 = a listing slide, photos.length = agent slide)
   // directly onto ctx at WxH, with all needed photos already preloaded. No separate intro
   // slide — step 0 is always the reveal slide, already showing the pixelated hero photo.
   async function renderSlideNative(ctx, W, H, step, zoomProgress){
     var n = state.photos.length;
     if(n > 0 && step === n){
+      var logoImg = await loadImageCached(LOGO_DATA_URI);
+      var tMs = (zoomProgress!=null) ? zoomProgress*PARCOURS_MS : null;
+      var p = (tMs!=null) ? Math.min(1, tMs/PARCOURS_ANIM_MS) : 1;
+      drawParcoursFrame(ctx, W, H, p, tMs, logoImg);
+    } else if(n > 0 && step === n+1){
       var agentSrc = state.agentBw ? state.agentPhotoBw : state.agentPhotoColor;
       var agentImg = await loadImageCached(agentSrc);
       await renderAgentFrameNative(ctx, W, H, agentImg, zoomProgress);
