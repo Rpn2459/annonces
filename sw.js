@@ -1,6 +1,6 @@
 // Service worker : réseau d'abord (toujours la dernière version en ligne), cache en secours hors connexion.
-const CACHE = 'gh-annonces-v5';
-const CORE = ['./', './index.html', './generateur-les-vendus-guy-hoquet.html', './generateur-annonce-guy-hoquet.html',
+const CACHE = 'gh-annonces-v6';
+const CORE = ['./', './index.html', './generateur-les-vendus-guy-hoquet.html', './generateur-annonce-guy-hoquet.html', './conseiller.html',
   './manifest.webmanifest', './logo-guy-hoquet.png', './icon-192.png', './icon-512.png', './avatar-emi.jpg'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => {
