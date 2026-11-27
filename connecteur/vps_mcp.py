@@ -112,6 +112,12 @@ class TokenAuth:
     async def __call__(self, scope, receive, send):
         if scope["type"] == "http":
             ok = False
+            # Chemins d'identification OAuth : répondre 404 (et non 401) pour que le client
+            # comprenne que ce serveur n'utilise pas OAuth et se rabatte sur l'adresse secrète.
+            p0 = scope.get("path", "")
+            if "/.well-known" in p0 or p0.rsplit("/", 1)[-1] in ("register", "authorize", "token"):
+                await JSONResponse({"erreur": "introuvable"}, status_code=404)(scope, receive, send)
+                return
             h = dict(scope["headers"]).get(b"authorization", b"").decode()
             if hmac.compare_digest(h, f"Bearer {TOKEN}"):
                 ok = True
