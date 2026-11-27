@@ -111,12 +111,24 @@ class TokenAuth:
 
     async def __call__(self, scope, receive, send):
         if scope["type"] == "http":
+            ok = False
             h = dict(scope["headers"]).get(b"authorization", b"").decode()
-            if not hmac.compare_digest(h, f"Bearer {TOKEN}"):
+            if hmac.compare_digest(h, f"Bearer {TOKEN}"):
+                ok = True
+            else:
+                # Variante « adresse secrète » : https://hôte/<jeton>/mcp (pour les clients sans en-tête personnalisé)
+                p = scope.get("path", "")
+                seg, _, rest = p[1:].partition("/")
+                if seg and hmac.compare_digest(seg, TOKEN):
+                    ok = True
+                    newp = "/" + rest
+                    scope = dict(scope, path=newp, raw_path=newp.encode())
+            if not ok:
                 await JSONResponse({"erreur": "non autorisé"}, status_code=401)(scope, receive, send)
                 return
         await self.app(scope, receive, send)
 
 
 if __name__ == "__main__":
-    uvicorn.run(TokenAuth(mcp.streamable_http_app()), host=HOST, port=PORT)
+    # access_log désactivé : l'adresse secrète ne doit jamais apparaître dans les journaux
+    uvicorn.run(TokenAuth(mcp.streamable_http_app()), host=HOST, port=PORT, access_log=False)
