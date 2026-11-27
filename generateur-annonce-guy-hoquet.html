@@ -3680,6 +3680,20 @@ if (typeof module === "object" && typeof module.exports === "object") Object.ass
         frameCtx.imageSmoothingQuality = "high";
         var offsetY = Math.round((H - W) / 2); // square content always fills the width
 
+        // Cover frame: the very first image of the video (used by Facebook/Instagram as the
+        // thumbnail before play) shows the first property photo instead of the white logo intro.
+        if(state.photos.length > 0){
+          await renderSlideNative(squareCtx, 1080, 1080, 1, 0);
+          frameCtx.fillStyle = navy;
+          frameCtx.fillRect(0,0,W,H);
+          frameCtx.drawImage(squareCanvas, 0, offsetY, W, W);
+          var coverUs = 120000;
+          var coverFrame = new VideoFrame(frameCanvas, {timestamp: tUs, duration: coverUs});
+          encoder.encode(coverFrame, {keyFrame: true});
+          coverFrame.close();
+          tUs += coverUs;
+        }
+
         for(var step=0; step<n; step++){
           if(encoderError) throw encoderError;
           videoBtn.textContent = "Préparation… " + (step+1) + "/" + n;
@@ -3759,6 +3773,15 @@ if (typeof module === "object" && typeof module.exports === "object") Object.ass
         slideIndex = 0;
         renderCard(); renderDots();
         recorder.start();
+
+        // Cover frame: first image of the video = first property photo (not the white intro)
+        if(state.photos.length > 0){
+          await renderSlideNative(squareCtx, 1080, 1080, 1, 0);
+          ctx.fillStyle = navy;
+          ctx.fillRect(0,0,W,H);
+          ctx.drawImage(squareCanvas, 0, offsetY, W, W);
+          await delay(150);
+        }
 
         for(var step=0; step<n; step++){
           videoBtn.textContent = "Enregistrement… " + (step+1) + "/" + n;
