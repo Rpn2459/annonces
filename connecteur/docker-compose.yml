@@ -1,0 +1,29 @@
+services:
+  web:
+    image: python:3.12-slim
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - mcp_data:/data
+    environment:
+      HOST: "0.0.0.0"
+      PORT: "8765"
+      TARGET_CONTAINER: "generateur-annonce-web-1"
+      ALLOWED_SERVICES: "generateur-annonce-web-1"
+      SOURCE_URL: "https://raw.githubusercontent.com/Rpn2459/annonces/claude/vps-index/generateur-vps-index.html"
+    command:
+      - sh
+      - -c
+      - >-
+        pip install -q --no-cache-dir 'mcp<2' uvicorn docker &&
+        mkdir -p /app &&
+        python -c "import urllib.request as u;u.urlretrieve('https://raw.githubusercontent.com/Rpn2459/annonces/claude/vps-index/connecteur/vps_mcp.py','/app/vps_mcp.py')" &&
+        python /app/vps_mcp.py
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}.rule=Host(`${COMPOSE_PROJECT_NAME}.${TRAEFIK_HOST}`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}.entrypoints=websecure"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}.tls.certresolver=letsencrypt"
+      - "traefik.http.services.${COMPOSE_PROJECT_NAME}.loadbalancer.server.port=8765"
+volumes:
+  mcp_data: {}
